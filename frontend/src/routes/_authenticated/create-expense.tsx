@@ -14,7 +14,7 @@ import { cn } from "@/lib/utils"
 import { useForm } from "@tanstack/react-form"
 import { api } from "@/lib/api";
 
-export const Route = createFileRoute('/create-expense')({
+export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpense,
 })
 

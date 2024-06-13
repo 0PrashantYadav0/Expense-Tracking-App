@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
-export const Route = createFileRoute('/expenses')({
+export const Route = createFileRoute('/_authenticated/expenses')({
   component: Expenses,
 })
 
@@ -31,7 +31,7 @@ function Expenses() {
 
   if (error) return <div>Error: {error.message}</div>;
   return (
-    <div className='m-auto max-w-3xl p-2'>
+    <div className='m-auto max-w-3xl p-2 mt-12'>
       
         <Table>
           <TableCaption>A list of your all expense.</TableCaption>

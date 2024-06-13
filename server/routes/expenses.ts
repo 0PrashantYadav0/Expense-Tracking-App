@@ -1,6 +1,7 @@
 import { Hono } from "hono";
 import { z } from "zod";
 import { zValidator } from "@hono/zod-validator";
+import { getUser } from "../auth/kinde";
 
 const expenseSchema = z.object({
   id: z.string().min(3).max(100),
@@ -35,10 +36,10 @@ const expenses: Expense[] = [
 
 
 export const expensesRoute = new Hono()
-  .get("/", (c) => {
+  .get("/", getUser, (c) => {
     return c.json({message: "All user found successfully ", expenses: expenses}, 200)  
   })
-  .post("/", zValidator("json", expenseSchema), async (c) => {
+  .post("/", getUser, zValidator("json", expenseSchema), async (c) => {
     const data = c.req.valid("json");
     if(!data) {
       return c.json({message: "Invalid data"}, 400);
@@ -46,7 +47,7 @@ export const expensesRoute = new Hono()
     expenses.push(data);
     return c.json({message : "Expense added"}, 200);
   })
-  .get("/:id{[0-9]+}", async (c) => {
+  .get("/:id{[0-9]+}", getUser, async (c) => {
     const {id} = c.req.param();
     const expense = expenses.find(e => e.id === id);
     if(!expense) {
@@ -54,7 +55,7 @@ export const expensesRoute = new Hono()
     }
     return c.json({message: "User with given id found", expense: expense}, 200);
   })
-  .get('/total-spend', async (c) => {
+  .get('/total-spend', getUser, async (c) => {
     const totalSpend = expenses.reduce((acc, expense) => acc + expense.amount, 0);
     return c.json({message: "Total spend found", totalSpend: totalSpend}, 200);
   })
