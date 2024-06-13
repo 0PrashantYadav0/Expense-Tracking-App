@@ -4,33 +4,33 @@ import { zValidator } from "@hono/zod-validator";
 
 const expenseSchema = z.object({
   id: z.string().min(3).max(100),
-  amount: z.number(),
-  description: z.string(),
-  date: z.date(),
+  title: z.string().min(3),
+  amount: z.number().positive(),
+  description: z.string().min(3),
 });
 
 type Expense = z.infer<typeof expenseSchema>;
 const createPostSchema = expenseSchema.omit({ id: true });
 
 const expenses: Expense[] = [ 
-  { 
-    id: "1", 
-    amount: 10, 
-    description: "Coffee", 
-    date: new Date("2022-01-01")
+  {
+    id: "1",
+    title: "Groceries",
+    amount: 50,
+    description: "Weekly grocery shopping",
   },
-  { 
-    id: "2", 
-    amount: 20, 
-    description: "Lunch", 
-    date: new Date("2022-01-02") 
-  }, 
-  { 
-    id: "3", 
-    amount: 30, 
-    description: "Dinner", 
-    date: new Date("2022-01-03"), 
-  }, 
+  {
+    id: "2",
+    title: "Gas",
+    amount: 30,
+    description: "Fuel for the car",
+  },
+  {
+    id: "3",
+    title: "Dinner",
+    amount: 40,
+    description: "Eating out with friends",
+  }
 ];
 
 
