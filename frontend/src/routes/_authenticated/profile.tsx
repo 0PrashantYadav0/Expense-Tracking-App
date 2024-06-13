@@ -11,11 +11,11 @@ export const Route = createFileRoute('/_authenticated/profile')({
 function Profile() {
   const { isPending, error, data } = useQuery(userQueryOption);
 
-  if(error) return <div>User Not Logged In</div>
+  if (error) return <div>User Not Logged In</div>
 
   return (
     <div className='mt-12 px-12'>
-      {isPending ? "Loading..." : 
+      {isPending ? "Loading..." :
         <>
           <h2 className='text-2xl'>Hello from profile</h2>
           <p className='font-bold capitalize text-3xl'>{data.user.given_name + ' ' + data.user.family_name || "..."}</p>

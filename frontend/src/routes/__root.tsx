@@ -10,7 +10,7 @@ export const Route = createRootRouteWithContext<MyRootContext>()({
   component: Root,
 })
 
-function Root(){ 
+function Root() {
   return (
     <>
       <Navbar />

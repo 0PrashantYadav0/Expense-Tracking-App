@@ -9,10 +9,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card"
-
+import { zodValidator } from "@tanstack/zod-form-adapter"
 import { cn } from "@/lib/utils"
 import { useForm } from "@tanstack/react-form"
 import { api } from "@/lib/api";
+import { createExpenseSchema } from "@server/types/sharedType";
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpense,
@@ -22,17 +23,18 @@ export const Route = createFileRoute('/_authenticated/create-expense')({
 function CreateExpense() {
   const naviage = useNavigate();
   const form = useForm({
+    validatorAdapter: zodValidator,
     defaultValues: {
       title: "",
       description: "",
       amount: "0",
     },
-    onSubmit: async ({value}) => {
-      const res = await api.expenses.$post({ json : value})
-      if(!res) {
+    onSubmit: async ({ value }) => {
+      const res = await api.expenses.$post({ json: value })
+      if (!res) {
         throw new Error('Failed to create expense')
       }
-      naviage({to : '/expenses'}) 
+      naviage({ to: '/expenses' })
     }
   })
   return (
@@ -51,6 +53,7 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="title"
+                validators={{onChange: createExpenseSchema.shape.title}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Title</Label>
@@ -76,6 +79,7 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="description"
+                validators={{onChange: createExpenseSchema.shape.description}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Description</Label>
@@ -101,6 +105,7 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="amount"
+                validators={{onChange: createExpenseSchema.shape.amount}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Amount</Label>
@@ -121,11 +126,10 @@ function CreateExpense() {
                   </>
                 )}
               >
-
               </form.Field>
             </div>
-           </div>
-           <form.Subscribe
+          </div>
+          <form.Subscribe
             selector={(state) => [state.canSubmit, state.isSubmitting]}
             children={([canSubmit, isSubmitting]) => (
               <Button
@@ -136,7 +140,7 @@ function CreateExpense() {
                 {isSubmitting ? "Submitting..." : "Submit"}
               </Button>
             )}
-           ></form.Subscribe>
+          ></form.Subscribe>
         </form>
       </CardContent>
     </Card>

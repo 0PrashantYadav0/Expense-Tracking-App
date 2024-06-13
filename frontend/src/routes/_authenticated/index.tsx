@@ -18,18 +18,18 @@ import { Skeleton } from '@/components/ui/skeleton';
 
 async function getDataQuery() {
   const res = await api.expenses['total-spend'].$get();
-  if(!res.ok) throw new Error('Failed to fetch data');
+  if (!res.ok) throw new Error('Failed to fetch data');
   const data = await res.json();
   return data;
 }
 
 function Index() {
   const { isPending, error, data } = useQuery({
-    queryKey: ['total-spend'], 
+    queryKey: ['total-spend'],
     queryFn: getDataQuery
   });
 
-  if(error) return <div>Error: {error.message}</div>
+  if (error) return <div>Error: {error.message}</div>
 
   return (
     <Card className="w-[350px] m-auto mt-12">
@@ -38,7 +38,7 @@ function Index() {
         <CardDescription>Total amount you spend daily</CardDescription>
       </CardHeader>
       <CardContent>
-        {isPending ? <Skeleton className='h-5 w-1/4'/>: data.totalSpend}
+        {isPending ? <Skeleton className='h-5 w-1/4' /> : data?.totalSpend}
       </CardContent>
     </Card>
   )
