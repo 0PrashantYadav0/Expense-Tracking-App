@@ -15,6 +15,13 @@
       "when": 1718293675811,
       "tag": "0001_colorful_nighthawk",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1718343128692,
+      "tag": "0002_round_shiva",
+      "breakpoints": true
     }
   ]
 }

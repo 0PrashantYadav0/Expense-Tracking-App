@@ -19,7 +19,7 @@ function Profile() {
         <>
           <h2 className='text-2xl'>Hello from profile</h2>
           <p className='font-bold capitalize text-3xl'>{data.user.given_name + ' ' + data.user.family_name || "..."}</p>
-          <Button variant="link" className='text-xl p-0'>
+          <Button asChild className='text-xl px-6 py-4 mt-4'>
             <a href="/api/logout">Logout</a>
           </Button>
         </>

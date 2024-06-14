@@ -13,7 +13,8 @@ import { zodValidator } from "@tanstack/zod-form-adapter"
 import { cn } from "@/lib/utils"
 import { useForm } from "@tanstack/react-form"
 import { api } from "@/lib/api";
-import { createExpenseSchema } from "@server/types/sharedType";
+import { expenseSchema } from "@server/types/sharedType";
+import { Calendar } from "@/components/ui/calendar";
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpense,
@@ -27,7 +28,8 @@ function CreateExpense() {
     defaultValues: {
       title: "",
       description: "",
-      amount: "0",
+      amount: "",
+      date: new Date().toISOString(),
     },
     onSubmit: async ({ value }) => {
       const res = await api.expenses.$post({ json: value })
@@ -38,10 +40,10 @@ function CreateExpense() {
     }
   })
   return (
-    <Card className="w-[500px] p-2 m-auto mt-12">
+    <Card className="sm:w-[500px] p-2 mx-4 my-6 sm:m-auto sm:mt-12">
       <CardHeader>
-        <CardTitle>Create Expense</CardTitle>
-        <CardDescription>Add you new Expenses.</CardDescription>
+        <CardTitle className="text-center">Create Expense</CardTitle>
+        <CardDescription className="text-center">Add you new Expenses.</CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={(e) => {
@@ -53,7 +55,7 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="title"
-                validators={{onChange: createExpenseSchema.shape.title}}
+                validators={{onChange: expenseSchema.shape.title}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Title</Label>
@@ -79,7 +81,7 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="description"
-                validators={{onChange: createExpenseSchema.shape.description}}
+                validators={{onChange: expenseSchema.shape.description}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Description</Label>
@@ -105,18 +107,41 @@ function CreateExpense() {
             <div className="flex flex-col space-y-1.5">
               <form.Field
                 name="amount"
-                validators={{onChange: createExpenseSchema.shape.amount}}
+                validators={{onChange: expenseSchema.shape.amount}}
                 children={(field) => (
                   <>
                     <Label htmlFor={field.name}>Amount</Label>
                     <Input
                       id={field.name}
                       name={field.name}
-                      type="text"
+                      type="number"
                       value={field.state.value}
                       onBlur={field.handleBlur}
                       placeholder="Amount of the expense"
                       onChange={(e) => field.handleChange(e.target.value)}
+                    />
+                    {field.state.meta.touchedErrors ?
+                      <em>
+                        {field.state.meta.touchedErrors}
+                      </em>
+                      : null}
+                  </>
+                )}
+              >
+              </form.Field>
+            </div>
+            <div className="flex flex-col space-y-1.5">
+              <form.Field
+                name="date"
+                validators={{onChange: expenseSchema.shape.date}}
+                children={(field) => (
+                  <>
+                    <Label htmlFor={field.name}>Date</Label>
+                    <Calendar
+                      mode="single"
+                      selected={new Date(field.state.value)}
+                      onSelect={(date) => field.handleChange((date ?? new Date()).toISOString())}
+                      className="rounded-md border shadow m-auto my-2"
                     />
                     {field.state.meta.touchedErrors ?
                       <em>

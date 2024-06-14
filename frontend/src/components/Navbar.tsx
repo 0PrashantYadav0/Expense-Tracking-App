@@ -2,7 +2,9 @@ import { Link } from '@tanstack/react-router'
 
 const Navbar = () => {
   return (
-    <div className="md:px-12 px-4 py-4 flex md:gap-24 gap-4">
+    <div className='flex justify-between py-4 px-8 items-center'>
+      <h1 className='font-bold text-2xl'>Expense Tracker</h1>
+      <div className='flex gap-8'>
         <Link to="/" className="[&.active]:font-bold">
           Home
         </Link>{' '}
@@ -19,6 +21,7 @@ const Navbar = () => {
           Profile
         </Link>
       </div>
+    </div>
   )
 }
 
