@@ -5,7 +5,7 @@
   "scripts": {
     "start": "bun server/index.ts",
     "dev": "bun --watch server/index.ts",
-    "build": "bun install && bun install --prefix frontend && bun run build --prefix frontend/"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "devDependencies": {
     "@types/bun": "latest",
