@@ -10,7 +10,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { deleteExpense, getAllExpensesQueryOption, loadingCreateExpenseQueryOption } from '@/lib/api';
+import { deleteExpense, getAllExpensesQueryOption, getTotalOfExpenses, loadingCreateExpenseQueryOption } from '@/lib/api';
 import { Button } from '@/components/ui/button';
 import { Trash } from 'lucide-react';
 import { toast } from 'sonner';
@@ -104,10 +104,6 @@ function ExpenseDeleteButton({ id }: { id: number }) {
       });
     },
     onSuccess: () => {
-      toast("Expense Deleted", {
-        description: `Successfully deleted expense: ${id}`,
-      });
-
       queryClient.setQueryData(
         getAllExpensesQueryOption.queryKey,
         (existingExpenses) => ({
@@ -115,6 +111,10 @@ function ExpenseDeleteButton({ id }: { id: number }) {
           expenses: existingExpenses?.expenses.filter((e) => e.id !== id) || [],
         })
       );
+      queryClient.invalidateQueries(getTotalOfExpenses);
+      toast("Expense Deleted", {
+        description: `Successfully deleted expense: ${id}`,
+      });
     },
   });
 

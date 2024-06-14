@@ -2,8 +2,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button';
-import { createExpense, getAllExpensesQueryOption, loadingCreateExpenseQueryOption } from "@/lib/api";
-import { useQueryClient } from "@tanstack/react-query";
+import { createExpense, getAllExpensesQueryOption, getTotalOfExpenses, loadingCreateExpenseQueryOption } from "@/lib/api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -26,7 +26,7 @@ export const Route = createFileRoute('/_authenticated/create-expense')({
 function CreateExpense() {
 
   const queryClient = useQueryClient();
-  const naviage = useNavigate();
+  const navigate = useNavigate();
 
   const form = useForm({
 
@@ -42,7 +42,7 @@ function CreateExpense() {
     onSubmit: async ({ value }) => {
       const existingQueryClient = await queryClient.ensureQueryData(getAllExpensesQueryOption);
       
-      naviage({ to: '/expenses' });
+      navigate({ to: '/expenses' });
 
       //loading state
       queryClient.setQueryData(loadingCreateExpenseQueryOption.queryKey, {expense:value})
@@ -56,6 +56,7 @@ function CreateExpense() {
         toast("Expense Created Successfully", {
           description: `Expense is created successfully: ${expense.id}`,
         })
+        queryClient.invalidateQueries(getTotalOfExpenses);
       } catch (error) {
         toast("Error", {
           description: "Failed to create new Expense",

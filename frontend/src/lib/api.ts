@@ -48,7 +48,19 @@ export const loadingCreateExpenseQueryOption = queryOptions<{expense?: CreateExp
   queryFn: async () => {
     return {};
   },
-  staleTime: Infinity
+})
+
+async function getTotalOfAllExpenses() {
+  const res = await api.expenses['total-spend'].$get();
+  if (!res.ok) throw new Error('Failed to fetch data');
+  const data = await res.json();
+  return data;
+}
+
+export const getTotalOfExpenses = queryOptions({
+  queryKey: ['total-spend'],
+  queryFn: getTotalOfAllExpenses,
+  staleTime: Infinity,
 })
 
 export async function deleteExpense({ id }: { id: number }) {
