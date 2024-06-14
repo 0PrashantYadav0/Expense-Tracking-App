@@ -26,6 +26,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",
     "drizzle-zod": "^0.5.1",
+    "embla-carousel-react": "^8.1.5",
     "lucide-react": "^0.394.0",
     "next-themes": "^0.3.0",
     "react": "^18.2.0",

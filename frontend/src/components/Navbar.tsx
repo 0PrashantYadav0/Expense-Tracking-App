@@ -3,7 +3,9 @@ import { Link } from '@tanstack/react-router'
 const Navbar = () => {
   return (
     <div className='flex justify-between py-4 px-8 items-center'>
-      <h1 className='font-bold text-2xl'>Expense Tracker</h1>
+      <Link to="/" className="[&.active]:font-bold">
+        <h1 className='font-bold text-2xl'>Expense Tracker</h1>
+      </Link>
       <div className='flex gap-8'>
         <Link to="/" className="[&.active]:font-bold">
           Home

@@ -3,7 +3,7 @@ import { Label } from "@/components/ui/label"
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button';
 import { createExpense, getAllExpensesQueryOption, getTotalOfExpenses, loadingCreateExpenseQueryOption } from "@/lib/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
