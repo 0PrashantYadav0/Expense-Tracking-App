@@ -2,6 +2,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button';
+import { createExpense, getAllExpensesQueryOption, loadingCreateExpenseQueryOption } from "@/lib/api";
+import { useQueryClient } from "@tanstack/react-query";
 import {
   Card,
   CardContent,
@@ -12,9 +14,9 @@ import {
 import { zodValidator } from "@tanstack/zod-form-adapter"
 import { cn } from "@/lib/utils"
 import { useForm } from "@tanstack/react-form"
-import { api } from "@/lib/api";
 import { expenseSchema } from "@server/types/sharedType";
 import { Calendar } from "@/components/ui/calendar";
+import { toast } from "sonner";
 
 export const Route = createFileRoute('/_authenticated/create-expense')({
   component: CreateExpense,
@@ -22,23 +24,50 @@ export const Route = createFileRoute('/_authenticated/create-expense')({
 
 
 function CreateExpense() {
+
+  const queryClient = useQueryClient();
   const naviage = useNavigate();
+
   const form = useForm({
+
     validatorAdapter: zodValidator,
+
     defaultValues: {
       title: "",
       description: "",
       amount: "",
       date: new Date().toISOString(),
     },
+    
     onSubmit: async ({ value }) => {
-      const res = await api.expenses.$post({ json: value })
-      if (!res) {
-        throw new Error('Failed to create expense')
+      const existingQueryClient = await queryClient.ensureQueryData(getAllExpensesQueryOption);
+      
+      naviage({ to: '/expenses' });
+
+      //loading state
+      queryClient.setQueryData(loadingCreateExpenseQueryOption.queryKey, {expense:value})
+
+      try {
+        const expense = await createExpense({value});
+        queryClient.setQueriesData(getAllExpensesQueryOption, {
+          ...existingQueryClient,
+          expenses: [ expense, ...existingQueryClient.expenses]
+        });
+        toast("Expense Created Successfully", {
+          description: `Expense is created successfully: ${expense.id}`,
+        })
+      } catch (error) {
+        toast("Error", {
+          description: "Failed to create new Expense",
+          
+        })
+      }finally{
+        queryClient.setQueryData(loadingCreateExpenseQueryOption.queryKey, {})
       }
-      naviage({ to: '/expenses' })
     }
   })
+
+
   return (
     <Card className="sm:w-[500px] p-2 mx-4 my-6 sm:m-auto sm:mt-12">
       <CardHeader>

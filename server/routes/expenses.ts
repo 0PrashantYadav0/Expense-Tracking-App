@@ -26,9 +26,9 @@ export const expensesRoute = new Hono()
 
     const validExpense = insertExpensesSchema.parse({...expense, userId: user.id})
 
-    const result = db.insert(expenseTable).values(validExpense).returning().then((res) => res[0]);
+    const result = await db.insert(expenseTable).values(validExpense).returning().then((res) => res[0]);
 
-    return c.json({ message: "Expense added", data: result }, 201);
+    return c.json({ message: "Expense added", expense: result }, 200);
   })
   .get("/:id{[0-9]+}", getUser, async (c) => {
     const user = c.var.user;
@@ -56,7 +56,7 @@ export const expensesRoute = new Hono()
     if (!expense) {
       return c.json({ message: "Expense not found" }, 404);
     }
-    return c.json({ message: "User with given id found", expense: expense }, 200);
+    return c.json({ message: "Expense deleted successfully", expense: expense }, 200);
   })
   .get('/total-spend', getUser, async (c) => {
     const user = c.var.user;
@@ -72,4 +72,6 @@ export const expensesRoute = new Hono()
         .where(eq(expenseTable.userId, user.id))
         .orderBy(desc(expenseTable.createdAt))
         .limit(10);
+
+    return c.json({ message: "All 10 expenses found successfully ", expenses: expenses }, 200)
   })
