@@ -32,5 +32,6 @@ If you want to run directly on you device you can use my docker image for that.
   ```bash
   docker run -p 3000:3000 -p 3000:3000 0prashantyadav0/expense-tracker
   ```
+  Now you can access the app on localhost:3000
 
 This project was created using `bun init` in bun v1.1.3. [Bun](https://bun.sh) is a fast all-in-one JavaScript runtime.
